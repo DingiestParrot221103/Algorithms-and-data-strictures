@@ -1,18 +1,18 @@
 from PIL import Image
-import numpy as np
+import numpy as np # numpy, useful for assignement
 
-# Load the image
+# Load  image
 image = Image.open("/mnt/data/MAP mtmoon.png").convert("RGB")
 
-# Resize the image (optional, to match grid size)
-grid_size = (30, 30)  # Define the number of tiles (rows x columns)
+#Change size
+grid_size = (30, 30)  # number of tiles
 tile_width = image.width // grid_size[1]
 tile_height = image.height // grid_size[0]
 
-# Initialize the grid
+# Initialize
 grid = []
 
-# Analyze each tile
+# Check tiles
 for row in range(grid_size[0]):
     grid_row = []
     for col in range(grid_size[1]):
@@ -23,26 +23,25 @@ for row in range(grid_size[0]):
         lower = upper + tile_height
         tile = image.crop((left, upper, right, lower))
 
-        # Get the average color of the tile
+        # colour
         avg_color = np.array(tile).mean(axis=(0, 1))
 
-        # Classify based on color
-        if is_wall(avg_color):  # Define your logic for walls
+        if is_wall(avg_color):  # walls
             grid_row.append(1)
-        elif is_ladder(avg_color):  # Define your logic for ladders
+        elif is_ladder(avg_color):  # ladders
             grid_row.append(2)
         else:
             grid_row.append(0)
     grid.append(grid_row)
 
-# Function to determine if a color represents a wall
+# color represents a wall
 def is_wall(color):
     return color[0] < 100 and color[1] < 100 and color[2] < 100  # Example for dark areas
 
-# Function to determine if a color represents a ladder
+# Fcolor represents a ladder
 def is_ladder(color):
     return color[0] > 50 and color[2] > 150  # Example for blue areas
 
-# Print or save the grid
+# Print/save 
 for row in grid:
     print(row)
